@@ -9,7 +9,9 @@ const server = app.listen(PORT, () => {
 
 server.on('error', (error) => console.log(`Error en servidor ${error}`));
 app.use('/public', express.static(__dirname + '/public'));
-
+//faltaba agregar esto la puta madre 
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 //configuracion del motor
 app.set('view engine', 'hbs');
 app.set('views', './views');
@@ -56,4 +58,18 @@ app.get('/products/:id', (req, res) => {
 app.get('/form', (req, res) => {
   
   res.render('form', {  });
+});
+
+app.post('/products', (req, res) => {
+  const {body} = req;
+ 
+  const lastId = productsHC[productsHC.length - 1];
+  
+  //agrego bien el body y agrego un id nuevo
+  let nuevoId = lastId.id + 1;
+ 
+  let insertBody = {id: nuevoId, title: body.name, price: body.price, thumbnail: body.thumbnail}
+  productsHC.push(insertBody);
+ 
+  //res.redirect(301 ,"/products")
 });
